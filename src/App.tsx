@@ -12,6 +12,7 @@ import ClaimsPage from "./pages/ClaimsPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
+import { WalletProvider as WalletProviderType } from "./types/wallet";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +20,9 @@ const queryClient = new QueryClient();
 interface WalletContextType {
   isWalletConnected: boolean;
   walletAddress: string;
-  connectWallet: (address: string) => void;
+  walletProvider: WalletProviderType | null;
+  walletBalance: string;
+  connectWallet: (address: string, provider: WalletProviderType, balance?: string) => void;
   disconnectWallet: () => void;
 }
 
@@ -36,21 +39,29 @@ export const useWallet = () => {
 const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
+  const [walletProvider, setWalletProvider] = useState<WalletProviderType | null>(null);
+  const [walletBalance, setWalletBalance] = useState("0");
 
-  const connectWallet = (address: string) => {
+  const connectWallet = (address: string, provider: WalletProviderType, balance = "0") => {
     setIsWalletConnected(true);
     setWalletAddress(address);
+    setWalletProvider(provider);
+    setWalletBalance(balance);
   };
 
   const disconnectWallet = () => {
     setIsWalletConnected(false);
     setWalletAddress("");
+    setWalletProvider(null);
+    setWalletBalance("0");
   };
 
   return (
     <WalletContext.Provider value={{
       isWalletConnected,
       walletAddress,
+      walletProvider,
+      walletBalance,
       connectWallet,
       disconnectWallet
     }}>

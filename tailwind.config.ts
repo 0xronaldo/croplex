@@ -34,6 +34,11 @@ export default {
 					light: 'hsl(var(--agriculture-light))',
 					dark: 'hsl(var(--agriculture-dark))'
 				},
+				sky: {
+					light: 'hsl(var(--sky-light))',
+					medium: 'hsl(var(--sky-medium))',
+					dark: 'hsl(var(--sky-dark))'
+				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))'

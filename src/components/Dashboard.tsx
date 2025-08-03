@@ -10,13 +10,14 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { useWallet } from "@/contexts/WalletContext";
+import { WalletProvider } from "@/types/wallet";
 
 const Dashboard = () => {
-  const { isWalletConnected, walletAddress } = useWallet();
+  const { isWalletConnected, walletAddress, walletProvider } = useWallet();
   const [showRegistration, setShowRegistration] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
 
-  const handleWalletConnected = (address: string) => {
+  const handleWalletConnected = (address: string, provider: WalletProvider) => {
     setShowRegistration(true);
   };
 

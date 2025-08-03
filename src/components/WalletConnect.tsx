@@ -4,13 +4,14 @@ import { Wallet, Shield, Leaf, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useWallet } from "@/contexts/WalletContext";
+import { WalletProvider } from "@/types/wallet";
 
 interface WalletConnectProps {
-  onWalletConnected?: (address: string) => void;
+  onWalletConnected?: (address: string, provider: WalletProvider) => void;
 }
 
 const WalletConnect = ({ onWalletConnected }: WalletConnectProps) => {
-  const { isWalletConnected, walletAddress, connectWallet } = useWallet();
+  const { isWalletConnected, walletAddress, walletProvider, connectWallet } = useWallet();
   const [isConnecting, setIsConnecting] = useState(false);
   const { toast } = useToast();
 
@@ -21,7 +22,15 @@ const WalletConnect = ({ onWalletConnected }: WalletConnectProps) => {
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     const mockAddress = "0x" + Math.random().toString(16).substr(2, 8) + "..." + Math.random().toString(16).substr(2, 4);
-    connectWallet(mockAddress);
+    const mockProvider: WalletProvider = {
+      id: 'metamask',
+      name: 'MetaMask',
+      icon: '🦊',
+      detected: true,
+      isMetaMask: true
+    };
+    
+    connectWallet(mockAddress, mockProvider, "1.2345");
     setIsConnecting(false);
     
     toast({
@@ -29,7 +38,7 @@ const WalletConnect = ({ onWalletConnected }: WalletConnectProps) => {
       description: "Successfully connected to your Web3 wallet.",
     });
     
-    onWalletConnected?.(mockAddress);
+    onWalletConnected?.(mockAddress, mockProvider);
   };
 
   return (
@@ -52,7 +61,8 @@ const WalletConnect = ({ onWalletConnected }: WalletConnectProps) => {
           {isWalletConnected ? (
             <div className="animate-fade-in">
               <div className="flex items-center gap-2">
-                <p className="text-sm text-muted-foreground">Connected Wallet</p>
+                <span className="text-lg">{walletProvider?.icon}</span>
+                <p className="text-sm text-muted-foreground">Connected to {walletProvider?.name}</p>
                 <div className="w-2 h-2 bg-agriculture rounded-full animate-pulse"></div>
               </div>
               <p className="font-semibold text-foreground font-mono">{walletAddress}</p>
